@@ -1,0 +1,39 @@
+{
+	"name": "cumplebot",
+	"version": "1.0.0",
+	"description": "telegram bot for remember birthday",
+	"main": "server.js",
+	"scripts": {
+		"start:dev": "cross-env NODE_ENV=development node server.js",
+		"start:prod": "cross-env NODE_ENV=production node server.js",
+		"serve:dev": "cross-env NODE_ENV=development nodemon server.js",
+		"serve:prod": "cross-env NODE_ENV=production nodemon server.js",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"lint": "eslint ./",
+		"lint:fix": "eslint ./ --fix",
+		"build-doc": "jsdoc -c jsdoc.json -r . ./README.md -d ./../docs/server "
+	},
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"custom-env": "^2.0.1",
+		"moment": "^2.27.0",
+		"mongoose": "^5.10.3",
+		"node-schedule": "^1.3.2",
+		"telegraf": "^3.38.0"
+	},
+	"devDependencies": {
+		"babel-eslint": "^10.1.0",
+		"cross-env": "^7.0.2",
+		"docdash": "^1.2.0",
+		"eslint": "^7.8.1",
+		"eslint-config-airbnb-base": "^14.2.0",
+		"eslint-config-prettier": "^6.11.0",
+		"eslint-plugin-import": "^2.22.0",
+		"eslint-plugin-prettier": "^3.1.4",
+		"jsdoc": "^3.6.5",
+		"jsdoc-route-plugin": "^0.1.0",
+		"nodemon": "^2.0.4",
+		"prettier": "^2.1.1"
+	}
+}

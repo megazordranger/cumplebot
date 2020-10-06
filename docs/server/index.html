@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Home - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/megazordranger/cumplebot" target="_blank" class="menu-item" id="website_link" >Github repo</a></h2><h3>Classes</h3><ul><li><a href="module-cumplebot-CumpleBot.html">CumpleBot</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-cumplebot-CumpleBot.html#startBot">startBot</a></li></ul></li><li><a href="module-events-Events.html">Events</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-events-Events.html#birthdayMessage">birthdayMessage</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#callChannel">callChannel</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#getDay">getDay</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#getMonth">getMonth</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#help">help</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#saveBirthday">saveBirthday</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#start">start</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#storeDate">storeDate</a></li></ul></li><li><a href="module-functions-GlobalFunctions.html">GlobalFunctions</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-functions-GlobalFunctions.html#.capitalize">capitalize</a></li><li data-type='method' style='display: none;'><a href="module-functions-GlobalFunctions.html#.formatString">formatString</a></li></ul></li><li><a href="module-languages-Languages.html">Languages</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-languages-Languages.html#getActions">getActions</a></li><li data-type='method' style='display: none;'><a href="module-languages-Languages.html#getCommands">getCommands</a></li><li data-type='method' style='display: none;'><a href="module-languages-Languages.html#getLocale">getLocale</a></li></ul></li><li><a href="module-model-Model.html">Model</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-model-Model.html#initDB">initDB</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-cumplebot.html">cumplebot</a></li><li><a href="module-events.html">events</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-languages.html">languages</a></li><li><a href="module-model.html">model</a></li></ul>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+    <section class="package">
+        <h3> </h3>		
+    </section>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    <section class="readme usertext">
+        <article><h1>Cumplebot</h1>
+<p>Telegram bot that remembers your birthday for you and your chat partners</p>
+<!-- PROJECT SHIELDS -->
+<p><img src="https://img.shields.io/badge/build-node-brightgreen" alt=""> <img src="https://img.shields.io/badge/license-MIT-green" alt=""></p>
+<h2>Description</h2>
+<p>The bot save your birthday and in the the record date the bot display a happy birthday message to you.</p>
+<h2>Installation</h2>
+<h3>Local launch</h3>
+<ol>
+<li>Clone this repo: <code>git clone https://github.com/megazordranger/cumplebot</code></li>
+<li>Launch the <a href="https://www.mongodb.com/">mongo database</a> locally</li>
+<li>Create <code>.env.development</code> with the environment variables listed below</li>
+<li>Run <code>yarn install</code> in the root folder</li>
+</ol>
+<h3>Production launch</h3>
+<p>For production launch create <code>.env.production</code> file instead</p>
+<h3>Environment variables</h3>
+<ul>
+<li><code>DB_HOST</code> — URL of the mongo database</li>
+<li><code>DB_NAME</code>— name of mongo database</li>
+<li><code>RULE_HOUR</code>— day hour that the happy birthday message will be displayed</li>
+<li><code>BOT_TOKEN</code>— Telegram bot token</li>
+</ul>
+<p>Also, please, consider looking at <code>.env.sample</code>.</p>
+<h2>Multi-laguage support</h2>
+<p>For add new language to bot:</p>
+<ol>
+<li>Create new locale file in <code>src/locale</code> (the file name must be the respective language code)</li>
+<li>Import the new file in <code>src/locale/index.js</code> and add it to <code>Languages</code> class constructor, example:</li>
+</ol>
+<pre class="prettyprint source"><code>// src/locale/index.js
+const es = require('./es.js');
+...
+constructor() {
+    // Added new locale to lacale object
+	this.locale = {
+		es,
+		en,
+	};
+}
+</code></pre>
+<h2>Commands</h2>
+<ul>
+<li><code>/start</code> — Setting bot commands</li>
+<li><code>/help</code>— Show commands info</li>
+<li><code>/addme</code>— Save your birthday</li>
+<li><code>/channel</code>— Invoke all chat members registered in cumplebot</li>
+</ul></article>
+    </section>
+
+
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Mon Oct 05 2020 00:42:04 GMT-0400 (GMT-04:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+	"plugins": ["plugins/markdown", "jsdoc-route-plugin"],
+	"recurseDepth": 10,
+	"source": {
+		"includePattern": ".+\\.js(doc|x)?$",
+		"excludePattern": "(node_modules|docs)"
+	},
+	"sourceType": "module",
+	"tags": {
+		"allowUnknownTags": true,
+		"dictionaries": ["jsdoc", "closure"]
+	},
+	"templates": {
+		"cleverLinks": false,
+		"monospaceLinks": false
+	},
+	"opts": {
+		"template": "node_modules/docdash",
+		"recurse": true
+	},
+	"docdash": {
+		"sort": [true],
+		"collapse": [true],
+		"menu": {
+			"Github repo": {
+				"href": "https://github.com/megazordranger/cumplebot",
+				"target": "_blank",
+				"class": "menu-item",
+				"id": "website_link"
+			}
+		}
+	}
+}

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>events/index.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/megazordranger/cumplebot" target="_blank" class="menu-item" id="website_link" >Github repo</a></h2><h3>Classes</h3><ul><li><a href="module-cumplebot-CumpleBot.html">CumpleBot</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-cumplebot-CumpleBot.html#startBot">startBot</a></li></ul></li><li><a href="module-events-Events.html">Events</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-events-Events.html#birthdayMessage">birthdayMessage</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#callChannel">callChannel</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#getDay">getDay</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#getMonth">getMonth</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#help">help</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#saveBirthday">saveBirthday</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#start">start</a></li><li data-type='method' style='display: none;'><a href="module-events-Events.html#storeDate">storeDate</a></li></ul></li><li><a href="module-functions-GlobalFunctions.html">GlobalFunctions</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-functions-GlobalFunctions.html#.capitalize">capitalize</a></li><li data-type='method' style='display: none;'><a href="module-functions-GlobalFunctions.html#.formatString">formatString</a></li></ul></li><li><a href="module-languages-Languages.html">Languages</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-languages-Languages.html#getActions">getActions</a></li><li data-type='method' style='display: none;'><a href="module-languages-Languages.html#getCommands">getCommands</a></li><li data-type='method' style='display: none;'><a href="module-languages-Languages.html#getLocale">getLocale</a></li></ul></li><li><a href="module-model-Model.html">Model</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-model-Model.html#initDB">initDB</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-cumplebot.html">cumplebot</a></li><li><a href="module-events.html">events</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-languages.html">languages</a></li><li><a href="module-model.html">model</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">events/index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const Extra = require('telegraf/extra');
+const Markup = require('telegraf/markup');
+const moment = require('moment');
+
+/**
+ * @fileOverview This is the definition of the bot functions class
+ * @module events
+ */
+
+/**
+ * @classdesc Container class for bot functions
+ *
+ * @constructor
+ * @param {Object} cumplebot - Reference to CumpleBot class
+ */
+class Events {
+	constructor(cumplebot) {
+		this.cumplebot = cumplebot;
+	}
+
+	/**
+	 * Setting bot commands
+	 */
+	start() {
+		const { languages } = this.cumplebot;
+
+		return async (ctx) => {
+			const { language_code: lanCode = 'en' } = ctx.from;
+			const lan = languages.getLocale(lanCode);
+
+			const commands = [
+				{
+					command: `/${lan.COMMANDS.ADDME}`,
+					description: lan.DESCRIPTIONS.ADDME,
+				},
+				{
+					command: `/${lan.COMMANDS.CHANNEL}`,
+					description: lan.DESCRIPTIONS.CHANNEL,
+				},
+			];
+			await ctx.setMyCommands(commands);
+			return ctx.reply('Ok');
+		};
+	}
+
+	/**
+	 * Show bot commands to users
+	 */
+	help() {
+		const { languages } = this.cumplebot;
+
+		return async (ctx) => {
+			const { language_code: lanCode = 'en' } = ctx.from;
+			const lan = languages.getLocale(lanCode);
+
+			const commands = await ctx.getMyCommands();
+			const info = commands.reduce(
+				(acc, val) => `${acc}/${val.command} - ${val.description}\n`,
+				''
+			);
+			return ctx.reply(`${lan.DESCRIPTION}\n\n${info}`);
+		};
+	}
+
+	/**
+	 * Invoke all chat members registered in cumplebot
+	 */
+	callChannel() {
+		const {
+			bot,
+			model: {
+				models: { User },
+			},
+		} = this.cumplebot;
+
+		return async (ctx) => {
+			if (!ctx) return;
+			const {
+				chat: { id: chatId },
+				from: { id: fromId },
+			} = ctx.update.message;
+
+			const users = await User.find({ chatId });
+			let message = '';
+
+			users.forEach(({ userId, username }) => {
+				if (fromId !== userId) message += `@${username} `;
+			});
+
+			bot.telegram.sendMessage(chatId, message);
+		};
+	}
+
+	/**
+	 * Show inline keyboard for birthday month selection
+	 */
+	getMonth() {
+		const {
+			functions: { capitalize },
+			languages,
+		} = this.cumplebot;
+
+		return (ctx) => {
+			const { language_code: lanCode = 'en' } = ctx.from;
+			const lan = languages.getLocale(lanCode);
+			const buttons = [];
+
+			for (let i = 0; i &lt; 12; i++) {
+				const monthShort = moment()
+					.month(i)
+					.locale(lanCode)
+					.format('MMM');
+
+				const button = Markup.callbackButton(
+					capitalize(monthShort),
+					`month ${i}`
+				);
+				buttons.push(button);
+			}
+
+			const keyboard = Markup.inlineKeyboard(buttons, {
+				columns: 3,
+			});
+
+			ctx.reply(lan.SELECT_MONTH, Extra.markup(keyboard));
+		};
+	}
+
+	/**
+	 * Show inline keyboard for birthday day selection
+	 */
+	getDay() {
+		const { languages } = this.cumplebot;
+
+		return (ctx) => {
+			const { language_code: lanCode = 'en' } = ctx.from;
+			const lan = languages.getLocale(lanCode);
+
+			const month = ctx.match.split(' ')[1];
+			const monthName = moment()
+				.month(month)
+				.locale(lanCode)
+				.format('MMMM');
+			const days = moment()
+				.month(month)
+				.year(2020)
+				.endOf('month')
+				.format('DD');
+			const buttons = [];
+
+			for (let i = 1; i &lt;= 35; i++) {
+				let button = Markup.callbackButton(i, `day ${i} ${month}`);
+				if (i > days) button = Markup.callbackButton(' ', '_');
+				buttons.push(button);
+			}
+
+			const keyboard = Markup.inlineKeyboard(buttons, {
+				columns: 7,
+			});
+
+			ctx.answerCbQuery(`${monthName}`);
+			ctx.deleteMessage();
+			ctx.reply(lan.SELECT_DAY, Extra.markup(keyboard));
+		};
+	}
+
+	/**
+	 * Catch month and day selected and send for save
+	 */
+	storeDate() {
+		return (ctx) => {
+			const [day, month] = ctx.match
+				.split(' ')
+				.slice(1, 3)
+				.map((i) => parseInt(i, 10));
+
+			ctx.answerCbQuery(`${day}`);
+			ctx.deleteMessage();
+			this.saveBirthday(ctx, { day, month: 1 + month });
+		};
+	}
+
+	/**
+	 * Save/update birthday in DB
+	 */
+	async saveBirthday(ctx, date) {
+		const {
+			functions: { formatString },
+			languages,
+			model: {
+				models: { User },
+			},
+		} = this.cumplebot;
+
+		const { language_code: lanCode = 'en' } = ctx.from;
+		const lan = languages.getLocale(lanCode);
+		const {
+			message: {
+				chat: { id: chatId },
+			},
+			from: {
+				id: userId,
+				username,
+				first_name: firstName,
+				last_name: lastName,
+			},
+		} = ctx.update.callback_query;
+
+		let userDoc = await User.findOne({ userId, chatId });
+
+		if (userDoc) {
+			userDoc.birthday = date;
+		} else {
+			userDoc = new User({
+				userId,
+				chatId,
+				username,
+				firstName,
+				lastName,
+				lan: ctx.from.language_code,
+				birthday: date,
+			});
+		}
+
+		userDoc
+			.save()
+			.then(() => {
+				const successMesage = formatString(
+					lan.SUCCESSFULL,
+					`@${username}`
+				);
+				ctx.reply(successMesage);
+			})
+			.catch((err) => {
+				console.log(`caught the error: ${err}`);
+				ctx.reply(lan.ERROR);
+			});
+	}
+
+	/**
+	 * Send birthday message to user
+	 */
+	birthdayMessage() {
+		const {
+			bot,
+			functions: { formatString },
+			languages,
+			model: {
+				models: { User },
+			},
+		} = this.cumplebot;
+
+		return async () => {
+			const users = await User.find();
+
+			users.forEach(
+				({ chatId, birthday, lan: language, username, firstName }) => {
+					const lan = languages.getLocale(language);
+					const message = formatString(
+						lan.HAPPY_BIRTHDAY,
+						`@${username}`,
+						firstName
+					);
+
+					const { day, month } = birthday;
+					const currentMonth = parseInt(moment().format('M'), 10);
+					const currentDay = parseInt(moment().format('D'), 10);
+
+					if (day === currentDay &amp;&amp; month === currentMonth) {
+						bot.telegram.sendMessage(chatId, message);
+					}
+				}
+			);
+		};
+	}
+}
+
+module.exports = {
+	Events,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Mon Oct 05 2020 00:42:04 GMT-0400 (GMT-04:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
