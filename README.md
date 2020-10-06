@@ -25,10 +25,10 @@ For production launch create `.env.production` file instead
 
 ### Environment variables
 
--   `DB_HOST` — URL of the mongo database
--   `DB_NAME`— name of mongo database
--   `RULE_HOUR`— day hour that the happy birthday message will be displayed
--   `BOT_TOKEN`— Telegram bot token
+- `DB_HOST` — URL of the mongo database
+- `DB_NAME`— name of mongo database
+- `RULE_HOUR`— day hour that the happy birthday message will be displayed
+- `BOT_TOKEN`— Telegram bot token
 
 Also, please, consider looking at `.env.sample`.
 
@@ -54,7 +54,12 @@ constructor() {
 
 ## Commands
 
--   `/start` — Setting bot commands
--   `/help`— Show commands info
--   `/addme`— Save your birthday
--   `/channel`— Invoke all chat members registered in cumplebot
+- `/start` — Setting bot commands
+- `/help`— Show commands info
+- `/addme`— Save your birthday
+- `/channel`— Invoke all chat members registered in cumplebot
+
+## Documentation
+
+- [server](https://megazordranger.github.io/cumplebot/server/index.html)
+- [DB](https://megazordranger.github.io/cumplebot/db/cumplebot.html)
