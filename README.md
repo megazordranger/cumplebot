@@ -1,6 +1,6 @@
 # Cumplebot
 
-Telegram bot that remembers your birthday for you and your chat partners.
+Telegram bot
 
 <!-- PROJECT SHIELDS -->
 
